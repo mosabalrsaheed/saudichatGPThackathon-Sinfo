@@ -446,7 +446,12 @@ class ChatState extends State<Chat> {
                           mappingImgsToLetters(listName, indexofletter);
                       letersTyped = types.PartialText(text: _controller.text);
                     },
-                    child: Center(child: Image.asset(e)),
+                    child: Center(
+                        child: Image.asset(
+                      e,
+                      width: 32,
+                      height: 32,
+                    )),
                   ),
                 ),
               ))

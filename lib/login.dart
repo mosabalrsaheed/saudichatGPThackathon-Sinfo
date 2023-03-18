@@ -68,8 +68,8 @@ class LoginState extends State<Login> {
         // margin: const EdgeInsets.all(8.5),
         padding: const EdgeInsets.all(10.5),
         color: const Color.fromARGB(31, 212, 208, 208),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: ListView(
+          shrinkWrap: true,
           children: [
             // const SizedBox(
             //   height: 10,

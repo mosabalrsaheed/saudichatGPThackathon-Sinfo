@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
+import 'choose.dart';
 import 'login.dart';
 
 void main() {
@@ -33,6 +34,21 @@ class Logo extends StatefulWidget {
 }
 
 class LogoState extends State<Logo> {
+  @override
+  void initState() {
+    super.initState();
+    navigateToLogin();
+  }
+
+  void navigateToLogin() async {
+    ///wait for 3 seconds then go to login page
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ChoosePage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
