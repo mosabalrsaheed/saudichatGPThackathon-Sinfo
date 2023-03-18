@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -18,6 +19,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class chatScreen extends State<MyHomePage> {
+  Future<void> _playBlindPeopleSound() async {
+    final player = AudioPlayer();
+    await player.play(
+        AssetSource('record_for_blind.mp3')); // will immediately start playing
+  }
+
   TtsManager tts = TtsManager();
   final SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
@@ -43,8 +50,11 @@ class chatScreen extends State<MyHomePage> {
   final openAI = OpenAI.instance.build(
 
       // my key "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"
-      //"sk-xBWcnpPmvNBZ6SYTW7n6T3BlbkFJrLuznYBtuds8aplW3zt"
-      token: "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",
+      //token: "sk-xBWcnpPmvNBZ6SYTW7n6T3BlbkFJrLuznYBtuds8aplW3zt",
+      token:
+          "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", // LATEST KEY
+
+      //token: "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",
       baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
       isLogger: true);
 
@@ -95,6 +105,7 @@ class chatScreen extends State<MyHomePage> {
     _initSpeech();
     // keyboardControllerOne = TextEditingController();
     _controller = TextEditingController();
+    _playBlindPeopleSound();
   }
 
   @override
@@ -148,22 +159,23 @@ class chatScreen extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(
-              height: 200,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.all(0),
-                children: imges.reversed
-                    .map((e) => Image.asset(
-                          e,
-                          width: 64,
-                        ))
-                    .toList(),
-              ),
-            ),
+            // SizedBox(
+            //   height: 200,
+            //   child: ListView(
+            //     scrollDirection: Axis.horizontal,
+            //     padding: const EdgeInsets.all(0),
+            //     children: imges.reversed
+            //         .map((e) => Image.asset(
+            //               e,
+            //               width: 64,
+            //             ))
+            //         .toList(),
+            //   ),
+            // ),
             Flexible(
               child: Chat(
                 messages: messagesList,
+                customBottomWidget: Container(),
                 // customBottomWidget: TextField(
                 //   // onTapOutside: (event) => {
                 //   //   // _controller.text = _lastWords;
@@ -213,142 +225,172 @@ class chatScreen extends State<MyHomePage> {
                 user: _user,
               ),
             ),
-            Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    //shadowColor: Colors.blueGrey,
-                    // surfaceTintColor: Colors.amber,
-                    //   shape:BorderRadius.circular(2.2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //number Row
-                        Row(
-                            children: lettrsKeyboared(numbrs,
-                                MediaQuery.of(context).size.width, numbrsRow)),
-
-                        //fisrt row
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                          child: Row(
-                              children: !imgkeyboard
-                                  ? lettrsKeyboared(
-                                      fisrtRowLetters,
-                                      MediaQuery.of(context).size.width,
-                                      firstRow)
-                                  : signKeyboared(
-                                      fisrtRowsigns,
-                                      MediaQuery.of(context).size.width,
-                                      firstRow)),
-                        ),
-                        // second row
-                        Row(
-                            children: !imgkeyboard
-                                ? lettrsKeyboared(
-                                    secondRowLetters,
-                                    MediaQuery.of(context).size.width,
-                                    secondRow)
-                                : signKeyboared(
-                                    secondRowsigns,
-                                    MediaQuery.of(context).size.width,
-                                    secondRow)),
-                        // third row
-                        Row(
-                            children: !imgkeyboard
-                                ? lettrsKeyboared(thirdRowLetters,
-                                    MediaQuery.of(context).size.width, thirdRow)
-                                : signKeyboared(
-                                    thirdRowsigns,
-                                    MediaQuery.of(context).size.width,
-                                    thirdRow)),
-                        //space row
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _controller.text = _lastWords;
-                                    imgkeyboard = !imgkeyboard;
-                                    _controller.clear();
-                                    imges.clear();
-                                  });
-                                },
-                                // tooltip: 'clear',
-                                child: const Icon(Icons.back_hand_rounded),
-                              ),
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                    onPressed: (() {
-                                      _controller.text = "${_controller.text} ";
-                                    }),
-                                    icon: const Icon(Icons.space_bar_rounded),
-                                    label: const Text("space")),
-                              ),
-                              OutlinedButton(
-                                onPressed: () {
-                                  _controller.text;
-                                  _speechToText.isNotListening
-                                      ? _startListening()
-                                      : _stopListening();
-                                },
-
-                                // tooltip: 'go',
-                                child: Icon(_speechToText.isNotListening
-                                    ? Icons.mic_off
-                                    : Icons.mic),
-                              ),
-                              OutlinedButton(
-                                onPressed: () {
-                                  _controller.clear();
-                                  setState(() {
-                                    _controller.clear();
-                                    setState(() {
-                                      sendMessage(letersTyped);
-                                    });
-                                  });
-                                },
-                                //tooltip: 'clear',
-                                child: const Icon(Icons.delete),
-                              ),
-                            ],
+            GestureDetector(
+                onTap: () {
+                  _controller.text;
+                  _speechToText.isNotListening
+                      ? _startListening()
+                      : _stopListening();
+                },
+                child: Card(
+                  shape: CircleBorder(
+                      side: BorderSide(
+                          width: 8, color: context.theme.primaryColor)),
+                  shadowColor: Colors.blueGrey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _speechToText.isNotListening
+                                ? Icons.mic_off
+                                : Icons.mic,
+                            size: 98,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
+                ))
+
+            // Column(
+            //   children: [
+            //     SizedBox(
+            //       width: double.infinity,
+            //       child: Card(
+            //         //shadowColor: Colors.blueGrey,
+            //         // surfaceTintColor: Colors.amber,
+            //         //   shape:BorderRadius.circular(2.2),
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             //number Row
+            //             Row(
+            //                 children: lettrsKeyboared(numbrs,
+            //                     MediaQuery.of(context).size.width, numbrsRow)),
+
+            //             //fisrt row
+            //             Padding(
+            //               padding:
+            //                   const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
+            //               child: Row(
+            //                   children: !imgkeyboard
+            //                       ? lettrsKeyboared(
+            //                           fisrtRowLetters,
+            //                           MediaQuery.of(context).size.width,
+            //                           firstRow)
+            //                       : signKeyboared(
+            //                           fisrtRowsigns,
+            //                           MediaQuery.of(context).size.width,
+            //                           firstRow)),
+            //             ),
+            //             // second row
+            //             Row(
+            //                 children: !imgkeyboard
+            //                     ? lettrsKeyboared(
+            //                         secondRowLetters,
+            //                         MediaQuery.of(context).size.width,
+            //                         secondRow)
+            //                     : signKeyboared(
+            //                         secondRowsigns,
+            //                         MediaQuery.of(context).size.width,
+            //                         secondRow)),
+            //             // third row
+            //             Row(
+            //                 children: !imgkeyboard
+            //                     ? lettrsKeyboared(thirdRowLetters,
+            //                         MediaQuery.of(context).size.width, thirdRow)
+            //                     : signKeyboared(
+            //                         thirdRowsigns,
+            //                         MediaQuery.of(context).size.width,
+            //                         thirdRow)),
+            //             //space row
+            //             Padding(
+            //               padding: const EdgeInsets.all(8.0),
+            //               child: Row(
+            //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                 children: [
+            //                   OutlinedButton(
+            //                     onPressed: () {
+            //                       setState(() {
+            //                         _controller.text = _lastWords;
+            //                         imgkeyboard = !imgkeyboard;
+            //                         _controller.clear();
+            //                         imges.clear();
+            //                       });
+            //                     },
+            //                     // tooltip: 'clear',
+            //                     child: const Icon(Icons.back_hand_rounded),
+            //                   ),
+            //                   Expanded(
+            //                     child: ElevatedButton.icon(
+            //                         onPressed: (() {
+            //                           _controller.text = "${_controller.text} ";
+            //                         }),
+            //                         icon: const Icon(Icons.space_bar_rounded),
+            //                         label: const Text("space")),
+            //                   ),
+            //                   OutlinedButton(
+            //                     onPressed: () {
+            //                       _controller.text;
+            //                       _speechToText.isNotListening
+            //                           ? _startListening()
+            //                           : _stopListening();
+            //                     },
+
+            //                     // tooltip: 'go',
+            //                     child: Icon(_speechToText.isNotListening
+            //                         ? Icons.mic_off
+            //                         : Icons.mic),
+            //                   ),
+            //                   OutlinedButton(
+            //                     onPressed: () {
+            //                       _controller.clear();
+            //                       setState(() {
+            //                         _controller.clear();
+            //                         setState(() {
+            //                           sendMessage(letersTyped);
+            //                         });
+            //                       });
+            //                     },
+            //                     //tooltip: 'clear',
+            //                     child: const Icon(Icons.delete),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.person_2_rounded),
-                label: const Text("")),
-            ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.search),
-                label: const Text("")),
-            ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.add),
-                label: const Text("")),
-          ],
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   margin: const EdgeInsets.all(8.0),
+      //   padding: const EdgeInsets.all(8.0),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       ElevatedButton.icon(
+      //           onPressed: () {},
+      //           icon: const Icon(Icons.person_2_rounded),
+      //           label: const Text("")),
+      //       ElevatedButton.icon(
+      //           onPressed: () {},
+      //           icon: const Icon(Icons.search),
+      //           label: const Text("")),
+      //       ElevatedButton.icon(
+      //           onPressed: () {},
+      //           icon: const Icon(Icons.add),
+      //           label: const Text("")),
+      //     ],
+      //   ),
+      // ),
     );
   }
 

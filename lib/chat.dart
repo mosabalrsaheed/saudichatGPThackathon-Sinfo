@@ -1,7 +1,7 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -11,32 +11,14 @@ import 'login.dart';
 import 'signs.dart';
 import 'textspeach.dart';
 
-class login extends StatelessWidget {
-  const login({
-    super.key,
-  });
+class ChatSigncreen extends StatefulWidget {
+  const ChatSigncreen({Key? key, required String title}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: FlexThemeData.light(scheme: FlexScheme.custom),
-      // The Mandy red, dark theme.
-      darkTheme: FlexThemeData.dark(scheme: FlexScheme.deepPurple),
-      // Use dark or light theme based on system setting.
-      themeMode: ThemeMode.dark,
-      home: const Chat(title: 'Chat Together'),
-    );
-  }
+  State<ChatSigncreen> createState() => ChatSigncreenState();
 }
 
-class Chat extends StatefulWidget {
-  const Chat({Key? key, required String title}) : super(key: key);
-
-  @override
-  State<Chat> createState() => ChatState();
-}
-
-class ChatState extends State<Chat> {
+class ChatSigncreenState extends State<ChatSigncreen> {
   final List<types.Message> _messages = [];
   //final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
   TtsManager tts = TtsManager();
@@ -65,7 +47,9 @@ class ChatState extends State<Chat> {
 
       // my key "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"
       //"sk-xBWcnpPmvNBZ6SYTW7n6T3BlbkFJrLuznYBtuds8aplW3zt"
-      token: "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",
+      //token: "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",
+      token:
+          "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", // LATEST KEY
       baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
       isLogger: true);
 
@@ -190,123 +174,164 @@ class ChatState extends State<Chat> {
                 children: imges.reversed
                     .map((e) => Image.asset(
                           e,
-                          width: 64,
+                          fit: BoxFit.contain,
+                          width: 32,
+                          height: 32,
                         ))
                     .toList(),
               ),
             ),
-            Column(
+            Expanded(
+              child: Chat(
+                messages: messagesList,
+                onSendPressed: (v) {},
+                user: _user,
+                customBottomWidget: Container(),
+              ),
+            ),
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    //shadowColor: Colors.blueGrey,
-                    // surfaceTintColor: Colors.amber,
-                    //   shape:BorderRadius.circular(2.2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //number Row
-                        Row(
-                            children: lettrsKeyboared(numbrs,
-                                MediaQuery.of(context).size.width, numbrsRow)),
-
-                        //fisrt row
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                          child: Row(
-                              children: !imgkeyboard
-                                  ? lettrsKeyboared(
-                                      fisrtRowLetters,
-                                      MediaQuery.of(context).size.width,
-                                      firstRow)
-                                  : signKeyboared(
-                                      fisrtRowsigns,
-                                      MediaQuery.of(context).size.width,
-                                      firstRow)),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40.0),
                         ),
-                        // second row
-                        Row(
-                            children: !imgkeyboard
-                                ? lettrsKeyboared(
-                                    secondRowLetters,
-                                    MediaQuery.of(context).size.width,
-                                    secondRow)
-                                : signKeyboared(
-                                    secondRowsigns,
-                                    MediaQuery.of(context).size.width,
-                                    secondRow)),
-                        // third row
-                        Row(
-                            children: !imgkeyboard
-                                ? lettrsKeyboared(thirdRowLetters,
-                                    MediaQuery.of(context).size.width, thirdRow)
-                                : signKeyboared(
-                                    thirdRowsigns,
-                                    MediaQuery.of(context).size.width,
-                                    thirdRow)),
-                        //space row
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _controller.text = _lastWords;
-                                    imgkeyboard = !imgkeyboard;
-                                    _controller.clear();
-                                    imges.clear();
-                                  });
-                                },
-                                // tooltip: 'clear',
-                                child: const Icon(Icons.back_hand_rounded),
-                              ),
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                    onPressed: (() {
-                                      _controller.text = "${_controller.text} ";
-                                    }),
-                                    icon: const Icon(Icons.space_bar_rounded),
-                                    label: const Text("space")),
-                              ),
-                              OutlinedButton(
-                                onPressed: () {
-                                  _controller.text;
-                                  _speechToText.isNotListening
-                                      ? _startListening()
-                                      : _stopListening();
-                                },
 
-                                // tooltip: 'go',
-                                child: Icon(_speechToText.isNotListening
-                                    ? Icons.mic_off
-                                    : Icons.mic),
-                              ),
-                              OutlinedButton(
-                                onPressed: () {
-                                  _controller.clear();
-                                  setState(() {
-                                    _controller.clear();
-                                    setState(() {
-                                      sendMessage(letersTyped);
-                                    });
-                                  });
-                                },
-                                //tooltip: 'clear',
-                                child: const Icon(Icons.delete),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        prefixIcon: const Icon(Icons.keyboard),
+                        hintText: "username or email",
+                        //icon: Icon(Icons.key_rounded),
+                      ),
                     ),
                   ),
                 ),
+                ElevatedButton(
+                    // onPressed: () {
+                    //   // do something with the text entered in the text field
+                    //   //String message = _textEditingController.text;
+                    //   // print(message);
+                    //   // _textEditingController.clear();
+                    // },
+
+                    onPressed: () {
+                      _controller.clear();
+                      setState(() {
+                        _controller.clear();
+                        setState(() {
+                          sendMessage(letersTyped);
+                        });
+                      });
+                      // _controller.text;
+                      _speechToText.isNotListening
+                          ? _startListening()
+                          : _stopListening();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                    ),
+                    child: Icon(_speechToText.isNotListening
+                        ? Icons.mic_off
+                        : Icons.mic)),
               ],
-            )
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Card(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //number Row
+                    Row(
+                        children: lettrsKeyboared(numbrs,
+                            MediaQuery.of(context).size.width, numbrsRow)),
+
+                    //fisrt row
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
+                      child: Row(
+                          children: !imgkeyboard
+                              ? lettrsKeyboared(fisrtRowLetters,
+                                  MediaQuery.of(context).size.width, firstRow)
+                              : signKeyboared(fisrtRowsigns,
+                                  MediaQuery.of(context).size.width, firstRow)),
+                    ),
+                    // second row
+                    Row(
+                        children: !imgkeyboard
+                            ? lettrsKeyboared(secondRowLetters,
+                                MediaQuery.of(context).size.width, secondRow)
+                            : signKeyboared(secondRowsigns,
+                                MediaQuery.of(context).size.width, secondRow)),
+                    // third row
+                    Row(
+                        children: !imgkeyboard
+                            ? lettrsKeyboared(thirdRowLetters,
+                                MediaQuery.of(context).size.width, thirdRow)
+                            : signKeyboared(thirdRowsigns,
+                                MediaQuery.of(context).size.width, thirdRow)),
+                    //space row
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () {
+                              setState(() {
+                                _controller.text = _lastWords;
+                                imgkeyboard = !imgkeyboard;
+                                _controller.clear();
+                                imges.clear();
+                              });
+                            },
+                            // tooltip: 'clear',
+                            child: const Icon(Icons.back_hand_rounded),
+                          ),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                                onPressed: (() {
+                                  _controller.text = "${_controller.text} ";
+                                }),
+                                icon: const Icon(Icons.space_bar_rounded),
+                                label: const Text("space")),
+                          ),
+                          // OutlinedButton(
+                          //   onPressed: () {
+                          //     _controller.text;
+                          //     _speechToText.isNotListening
+                          //         ? _startListening()
+                          //         : _stopListening();
+                          //   },
+                          //   // tooltip: 'go',
+                          //   child: Icon(_speechToText.isNotListening
+                          //       ? Icons.mic_off
+                          //       : Icons.mic),
+                          // ),
+                          OutlinedButton(
+                            onPressed: () {
+                              _controller.clear();
+                              setState(() {
+                                _controller.clear();
+                                setState(() {
+                                  sendMessage(letersTyped);
+                                });
+                              });
+                            },
+                            //tooltip: 'clear',
+                            child: const Icon(Icons.send),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
 
@@ -338,55 +363,9 @@ class ChatState extends State<Chat> {
         //     ),
         //   ],
         // ),
-        bottomNavigationBar: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(8),
-                padding: const EdgeInsets.all(8),
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(40.0),
-                    ),
-
-                    prefixIcon: const Icon(Icons.keyboard),
-                    hintText: "username or email",
-                    //icon: Icon(Icons.key_rounded),
-                  ),
-                ),
-              ),
-            ),
-            ElevatedButton(
-                // onPressed: () {
-                //   // do something with the text entered in the text field
-                //   //String message = _textEditingController.text;
-                //   // print(message);
-                //   // _textEditingController.clear();
-                // },
-
-                onPressed: () {
-                  _controller.clear();
-                  setState(() {
-                    _controller.clear();
-                    setState(() {
-                      sendMessage(letersTyped);
-                    });
-                  });
-                  // _controller.text;
-                  _speechToText.isNotListening
-                      ? _startListening()
-                      : _stopListening();
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                ),
-                child: Icon(
-                    _speechToText.isNotListening ? Icons.mic_off : Icons.mic)),
-          ],
-        ),
+        // bottomNavigationBar: Column(
+        //   children: [],
+        // ),
       ),
     );
   }

@@ -47,7 +47,7 @@ class ProfileState extends State<Profile> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const Chat(
+                  builder: (context) => const ChatSigncreen(
                         title: 'Sinfo',
                       )),
             );
@@ -164,7 +164,7 @@ class ProfileState extends State<Profile> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const Chat(
+                                builder: (context) => const ChatSigncreen(
                                   title: 'Sinfo',
                                 ),
                               ));

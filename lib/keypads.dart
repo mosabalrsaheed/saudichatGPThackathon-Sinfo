@@ -22,6 +22,7 @@ List<String> fisrtRowLetters = [
   "ق",
   "ث",
   "ض",
+  "ص",
 ];
 List<String> secondRowLetters = [
   "ط",

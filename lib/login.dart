@@ -48,7 +48,7 @@ class LoginState extends State<Login> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const Chat(
+                  builder: (context) => const ChatSigncreen(
                         title: 'Sinfo',
                       )),
             );

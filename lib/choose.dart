@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'chat.dart';
 import 'chatmessage.dart';
@@ -42,7 +43,7 @@ class _ChoosePageState extends State<ChoosePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const Chat(
+                  builder: (context) => const ChatSigncreen(
                         title: 'Sinfo',
                       )));
         },
@@ -52,40 +53,50 @@ class _ChoosePageState extends State<ChoosePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Card(
-              shape: const CircleBorder(),
+              shape: CircleBorder(
+                  side:
+                      BorderSide(width: 8, color: context.theme.primaryColor)),
               shadowColor: Colors.blueGrey,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/deaf.png",
-                      height: MediaQuery.of(context).size.height * .3,
-                    ),
-                    const Text(
-                      "دعم الاعاقه السمعيه",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/deaf.png",
+                        height: MediaQuery.of(context).size.height * .3,
+                      ),
+                      const Text(
+                        "دعم الاعاقه السمعيه",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             Card(
-              shape: const CircleBorder(),
+              shape: CircleBorder(
+                  side:
+                      BorderSide(width: 8, color: context.theme.primaryColor)),
               shadowColor: Colors.blueGrey,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/blind.png",
-                      height: MediaQuery.of(context).size.height * .3,
-                    ),
-                    const Text(
-                      "دعم الاعاقه البصىية",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/blind.png",
+                        height: MediaQuery.of(context).size.height * .3,
+                      ),
+                      const Text(
+                        "دعم الاعاقه البصرية",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
