@@ -45,11 +45,6 @@ class ChatSigncreenState extends State<ChatSigncreen> {
   final List<types.Message> messagesList = [];
   final openAI = OpenAI.instance.build(
 
-      // my key "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"
-      //"sk-xBWcnpPmvNBZ6SYTW7n6T3BlbkFJrLuznYBtuds8aplW3zt"
-      //token: "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",
-      token:
-          "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", // LATEST KEY
       baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
       isLogger: true);
 
