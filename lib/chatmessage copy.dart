@@ -42,9 +42,6 @@ class chatScreen extends State<MyHomePage> {
   final List<types.Message> messagesList = [];
   final openAI = OpenAI.instance.build(
 
-      // my key "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"
-      //"sk-xBWcnpPmvNBZ6SYTW7n6T3BlbkFJrLuznYBtuds8aplW3zt"
-      token: "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",
       baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
       isLogger: true);
 
